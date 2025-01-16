@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reverse Polish Notation (RPN) Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="app-page">
+      <section class="app-calc rpn-calc">
+        <input class="rpn-calc__result" readonly />
+        <ul class="rpn-calc__inner calc-inner">
+          <!-- МАТЕМАТИЧЕСКИЕ ФУНКЦИИ: -->
+          <!-- Ряд №1: -->
+          <li class="calc-inner__math-functions math-functions">
+            <!-- квадратный корень из числа х: -->
+            <button class="math-functions__elem square-root">
+              <i class="fa-solid fa-square-root-variable"></i>
+            </button>
+
+            <!-- возведение основания натурального логарифма ~2.718 в степень x: -->
+            <button class="math-functions__elem">e ^ x</button>
+
+            <!-- вычисление натурального логарифма (LN) заданного числа x: -->
+            <button class="math-functions__elem">LN(x)</button>
+
+            <!-- возведение числа y в степень x: -->
+            <button class="math-functions__elem">y ^ x</button>
+
+            <!-- вычисление обратного числа (рецепрока) для текущего значения в стеке: -->
+            <button class="math-functions__elem">1 / x</button>
+
+            <!-- вычисление числа х, умноженного на 10^n (где n - целое число): -->
+            <button class="math-functions__elem">Σ+</button>
+
+            <!-- Ряд №2: -->
+            <div class="math-functions__memory-actions memory-actions">
+              <!-- сохранение верхнего элемента стека в память для дальнейшего использования: -->
+              <button
+                class="memory-actions__elem memory-actions-store"
+                title="Store"
+              >
+                STO
+              </button>
+
+              <!-- извлечение числа из памяти (если оно сохранено заранее): -->
+              <button
+                class="memory-actions__elem memory-actions-recall"
+                title="Recall"
+              >
+                RCL
+              </button>
+            </div>
+
+            <!-- перемещение верхнего элемента стека вниз [5, 8, 3] -> [8, 3, 5]: -->
+            <button class="math-functions__elem" title="Roll Down">
+              R<i class="fa-solid fa-arrow-down-long"></i>
+            </button>
+
+            <!-- Тригонометрия: -->
+            <div class="math-functions__triginometry triginometry">
+              <button class="triginometry__elem sin">SIN</button>
+              <button class="triginometry__elem cos">COS</button>
+              <button class="triginometry__elem tan">TAN</button>
+            </div>
+
+            <!-- Ряд №3: -->
+            <button class="math-functions__elem enter-elem">Enter</button>
+
+            <!-- обмена местами двух верхних элементов стека: -->
+            <button class="math-functions__elem">x<>y</button>
+
+            <!-- смена знака числа, находящегося на вершине стека: -->
+            <button class="math-functions__elem">+ / -</button>
+
+            <!-- ввод чисел в экспотенциальной форме (научной нотации) "2.5 х 10^3" это "2.5 - Е - 3 = 2500" : -->
+            <button class="math-functions__elem">E</button>
+            <button class="math-functions__elem clear-value-elem" title="Clear">
+              <i class="fa-solid fa-left-long"></i>
+            </button>
+          </li>
+
+          <li
+            class="calc-inner__actions-arithmetic-nums actions-arithmetic-nums"
+          >
+            <!-- Ряд №4: -->
+            <div class="actions-arithmetic-nums__actions actions">
+              <!-- функция программирования собственных вычислений : -->
+              <button class="actions__elem xeq-elem" title="Progs">XEQ</button>
+              <!-- Roll Down (сдвиг верхнего эл-та стека вниз) т.е. [5, 8, 3] -> [8, 3, 5]: -->
+              <button class="actions__elem rd-elem" title="Roll Down">
+                <i class="fa-solid fa-left-long"></i>
+              </button>
+              <!-- Roll Up (сдвиг верхнего эл-та стека вверх) т.е. [5, 8, 3] -> [3, 5, 8]: -->
+              <button class="actions__elem rup-elem" title="Roll Up">
+                <i class="fa-solid fa-right-long"></i>
+              </button>
+              <button class="actions__elem clear-all-elem" title="Clear All">
+                С
+              </button>
+            </div>
+
+            <div
+              class="actions-arithmetic-nums__arithmetic-nums arithmetic-nums"
+            >
+              <button class="arithmetic-nums__elem">7</button>
+              <button class="arithmetic-nums__elem">8</button>
+              <button class="arithmetic-nums__elem">9</button>
+              <button class="arithmetic-nums__elem">/</button>
+
+              <!-- Ряд №5: -->
+              <button class="arithmetic-nums__elem">4</button>
+              <button class="arithmetic-nums__elem">5</button>
+              <button class="arithmetic-nums__elem">6</button>
+              <button class="arithmetic-nums__elem">*</button>
+
+              <!-- Ряд №6: -->
+              <button class="arithmetic-nums__elem">1</button>
+              <button class="arithmetic-nums__elem">2</button>
+              <button class="arithmetic-nums__elem">3</button>
+              <button class="arithmetic-nums__elem">-</button>
+
+              <!-- Ряд №7: -->
+              <button class="arithmetic-nums__elem">0</button>
+              <button class="arithmetic-nums__elem">.</button>
+              <button class="arithmetic-nums__elem" title="Run / Stop">
+                R / S
+              </button>
+              <button class="arithmetic-nums__elem">+</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+  <script type="module" src="main.mjs"></script>
+</html>
