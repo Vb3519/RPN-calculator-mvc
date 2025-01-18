@@ -1,6 +1,3 @@
-const inputData = ['1', '7', '+', '4', '2', '/', '*'];
-const inputData2 = ['1', '2', '+', '4', '×', '3', '+'];
-
 const myRpnCalc = {
   inputValue: ['3', '4', '2', '*', '1', '5', '-', '2', '^', '/', '+'],
   calcStack: [],

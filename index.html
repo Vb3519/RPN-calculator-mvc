@@ -17,6 +17,7 @@
     <div class="app-page">
       <section class="app-calc rpn-calc">
         <input class="rpn-calc__result" readonly />
+
         <ul class="rpn-calc__inner calc-inner">
           <!-- МАТЕМАТИЧЕСКИЕ ФУНКЦИИ: -->
           <!-- Ряд №1: -->
@@ -83,7 +84,10 @@
 
             <!-- ввод чисел в экспотенциальной форме (научной нотации) "2.5 х 10^3" это "2.5 - Е - 3 = 2500" : -->
             <button class="math-functions__elem">E</button>
-            <button class="math-functions__elem clear-value-elem" title="Clear">
+            <button
+              class="math-functions__elem clear-value-elem"
+              title="Delete value"
+            >
               <i class="fa-solid fa-left-long"></i>
             </button>
           </li>
