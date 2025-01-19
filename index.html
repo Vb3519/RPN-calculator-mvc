@@ -23,31 +23,47 @@
           <!-- Ряд №1: -->
           <li class="calc-inner__math-functions math-functions">
             <!-- квадратный корень из числа х: -->
-            <button class="math-functions__elem square-root">
+            <button
+              class="math-functions__elem square-root"
+              title="Квадратный корень числа"
+            >
               <i class="fa-solid fa-square-root-variable"></i>
             </button>
 
             <!-- возведение основания натурального логарифма ~2.718 в степень x: -->
-            <button class="math-functions__elem">e ^ x</button>
+            <button
+              class="math-functions__elem"
+              title="Возведение основания натурального логарифма (~2.718) в степень х"
+            >
+              e ^ x
+            </button>
 
             <!-- вычисление натурального логарифма (LN) заданного числа x: -->
-            <button class="math-functions__elem">LN(x)</button>
+            <button class="math-functions__elem" title="Натуральный логарифм">
+              LN(x)
+            </button>
 
             <!-- возведение числа y в степень x: -->
-            <button class="math-functions__elem">y ^ x</button>
+            <button class="math-functions__elem" title="Возведение в степень">
+              y ^ x
+            </button>
 
             <!-- вычисление обратного числа (рецепрока) для текущего значения в стеке: -->
-            <button class="math-functions__elem">1 / x</button>
+            <button class="math-functions__elem" title="Обратное число">
+              1 / x
+            </button>
 
             <!-- вычисление числа х, умноженного на 10^n (где n - целое число): -->
-            <button class="math-functions__elem">Σ+</button>
+            <button class="math-functions__elem" title="115 000: 1.15 * 10^5">
+              Σ+
+            </button>
 
             <!-- Ряд №2: -->
             <div class="math-functions__memory-actions memory-actions">
               <!-- сохранение верхнего элемента стека в память для дальнейшего использования: -->
               <button
                 class="memory-actions__elem memory-actions-store"
-                title="Store"
+                title="Сохранить число"
               >
                 STO
               </button>
@@ -55,38 +71,59 @@
               <!-- извлечение числа из памяти (если оно сохранено заранее): -->
               <button
                 class="memory-actions__elem memory-actions-recall"
-                title="Recall"
+                title="Извлечь число"
               >
                 RCL
               </button>
             </div>
 
             <!-- перемещение верхнего элемента стека вниз [5, 8, 3] -> [8, 3, 5]: -->
-            <button class="math-functions__elem" title="Roll Down">
+            <button class="math-functions__elem" title="К предыдущему числу">
               R<i class="fa-solid fa-arrow-down-long"></i>
             </button>
 
             <!-- Тригонометрия: -->
             <div class="math-functions__triginometry triginometry">
-              <button class="triginometry__elem sin">SIN</button>
-              <button class="triginometry__elem cos">COS</button>
-              <button class="triginometry__elem tan">TAN</button>
+              <button class="triginometry__elem sin" title="Синус">SIN</button>
+              <button class="triginometry__elem cos" title="Косинус">
+                COS
+              </button>
+              <button class="triginometry__elem tan" title="Тангенс">
+                TAN
+              </button>
             </div>
 
             <!-- Ряд №3: -->
-            <button class="math-functions__elem enter-elem">Enter</button>
+            <button
+              class="math-functions__elem enter-elem"
+              title="Ввод значения"
+            >
+              Enter
+            </button>
 
             <!-- обмена местами двух верхних элементов стека: -->
-            <button class="math-functions__elem">x<>y</button>
+            <button
+              class="math-functions__elem swap-values-btn"
+              title="Поменять значения местами"
+            >
+              x<i class="fa-solid fa-arrow-right-arrow-left"></i>y
+            </button>
 
             <!-- смена знака числа, находящегося на вершине стека: -->
-            <button class="math-functions__elem">+ / -</button>
+            <button class="math-functions__elem" title="Присвоить числу знак">
+              + / -
+            </button>
 
             <!-- ввод чисел в экспотенциальной форме (научной нотации) "2.5 х 10^3" это "2.5 - Е - 3 = 2500" : -->
-            <button class="math-functions__elem">E</button>
+            <button
+              class="math-functions__elem"
+              title="Основание натурального логафрима (~2.718)"
+            >
+              E
+            </button>
             <button
               class="math-functions__elem clear-value-elem"
-              title="Delete value"
+              title="Стереть значение"
             >
               <i class="fa-solid fa-left-long"></i>
             </button>
@@ -98,16 +135,22 @@
             <!-- Ряд №4: -->
             <div class="actions-arithmetic-nums__actions actions">
               <!-- функция программирования собственных вычислений : -->
-              <button class="actions__elem xeq-elem" title="Progs">XEQ</button>
+              <button
+                class="actions__elem xeq-elem"
+                title="Польз. программы"
+                disabled
+              >
+                XEQ
+              </button>
               <!-- Roll Down (сдвиг верхнего эл-та стека вниз) т.е. [5, 8, 3] -> [8, 3, 5]: -->
-              <button class="actions__elem rd-elem" title="Roll Down">
+              <button class="actions__elem rd-elem" title="Назад">
                 <i class="fa-solid fa-left-long"></i>
               </button>
               <!-- Roll Up (сдвиг верхнего эл-та стека вверх) т.е. [5, 8, 3] -> [3, 5, 8]: -->
-              <button class="actions__elem rup-elem" title="Roll Up">
+              <button class="actions__elem rup-elem" title="Вперед">
                 <i class="fa-solid fa-right-long"></i>
               </button>
-              <button class="actions__elem clear-all-elem" title="Clear All">
+              <button class="actions__elem clear-all-elem" title="Ресет">
                 С
               </button>
             </div>
@@ -135,7 +178,11 @@
               <!-- Ряд №7: -->
               <button class="arithmetic-nums__elem">0</button>
               <button class="arithmetic-nums__elem">.</button>
-              <button class="arithmetic-nums__elem" title="Run / Stop">
+              <button
+                class="arithmetic-nums__elem"
+                title="Начать / Остановить"
+                disabled
+              >
                 R / S
               </button>
               <button class="arithmetic-nums__elem">+</button>

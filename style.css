@@ -53,6 +53,14 @@
   justify-content: center;
 }
 
+.math-functions__elem.swap-values-btn {
+  font-size: 1rem;
+}
+
+.math-functions__elem.swap-values-btn > i {
+  margin: 0 0.2rem;
+}
+
 .math-functions__elem.enter-elem {
   grid-column: span 2;
 }
