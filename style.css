@@ -24,11 +24,13 @@
   background-color: #5e5e5e;
 }
 
-.rpn-calc__result {
+.rpn-calc__result-input {
   color: black;
   outline: none;
   height: 3rem;
   font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  padding: 0.5rem;
 }
 
 .rpn-calc__inner {
@@ -61,7 +63,7 @@
   margin: 0 0.2rem;
 }
 
-.math-functions__elem.enter-elem {
+.math-functions__elem.enter-btn {
   grid-column: span 2;
 }
 

@@ -16,12 +16,12 @@
   <body>
     <div class="app-page">
       <section class="app-calc rpn-calc">
-        <input class="rpn-calc__result" readonly />
+        <input id="calc-input" class="rpn-calc__result-input" readonly />
 
         <ul class="rpn-calc__inner calc-inner">
           <!-- МАТЕМАТИЧЕСКИЕ ФУНКЦИИ: -->
-          <!-- Ряд №1: -->
           <li class="calc-inner__math-functions math-functions">
+            <!-- РЯД №1: -->
             <!-- квадратный корень из числа х: -->
             <button
               class="math-functions__elem square-root"
@@ -32,33 +32,45 @@
 
             <!-- возведение основания натурального логарифма ~2.718 в степень x: -->
             <button
-              class="math-functions__elem"
+              class="math-functions__elem exp-btn"
               title="Возведение основания натурального логарифма (~2.718) в степень х"
             >
               e ^ x
             </button>
 
             <!-- вычисление натурального логарифма (LN) заданного числа x: -->
-            <button class="math-functions__elem" title="Натуральный логарифм">
+            <button
+              class="math-functions__elem ln-btn"
+              title="Натуральный логарифм"
+            >
               LN(x)
             </button>
 
             <!-- возведение числа y в степень x: -->
-            <button class="math-functions__elem" title="Возведение в степень">
+            <button
+              class="math-functions__elem pow-btn"
+              title="Возведение в степень"
+            >
               y ^ x
             </button>
 
             <!-- вычисление обратного числа (рецепрока) для текущего значения в стеке: -->
-            <button class="math-functions__elem" title="Обратное число">
+            <button
+              class="math-functions__elem reciprocal-btn"
+              title="Обратное число"
+            >
               1 / x
             </button>
 
             <!-- вычисление числа х, умноженного на 10^n (где n - целое число): -->
-            <button class="math-functions__elem" title="115 000: 1.15 * 10^5">
+            <button
+              class="math-functions__elem ePlus-btn"
+              title="115 000: 1.15 * 10^5"
+            >
               Σ+
             </button>
 
-            <!-- Ряд №2: -->
+            <!-- РЯД №2: -->
             <div class="math-functions__memory-actions memory-actions">
               <!-- сохранение верхнего элемента стека в память для дальнейшего использования: -->
               <button
@@ -78,24 +90,29 @@
             </div>
 
             <!-- перемещение верхнего элемента стека вниз [5, 8, 3] -> [8, 3, 5]: -->
-            <button class="math-functions__elem" title="К предыдущему числу">
+            <button
+              class="math-functions__elem prev-number-btn"
+              title="К предыдущему числу"
+            >
               R<i class="fa-solid fa-arrow-down-long"></i>
             </button>
 
             <!-- Тригонометрия: -->
             <div class="math-functions__triginometry triginometry">
-              <button class="triginometry__elem sin" title="Синус">SIN</button>
-              <button class="triginometry__elem cos" title="Косинус">
+              <button class="triginometry__elem sin-btn" title="Синус">
+                SIN
+              </button>
+              <button class="triginometry__elem cos-btn" title="Косинус">
                 COS
               </button>
-              <button class="triginometry__elem tan" title="Тангенс">
+              <button class="triginometry__elem tan-btn" title="Тангенс">
                 TAN
               </button>
             </div>
 
-            <!-- Ряд №3: -->
+            <!-- РЯД №3: -->
             <button
-              class="math-functions__elem enter-elem"
+              class="math-functions__elem enter-btn"
               title="Ввод значения"
             >
               Enter
@@ -110,14 +127,17 @@
             </button>
 
             <!-- смена знака числа, находящегося на вершине стека: -->
-            <button class="math-functions__elem" title="Присвоить числу знак">
+            <button
+              class="math-functions__elem toggle-number-sign-btn"
+              title="Присвоить числу знак"
+            >
               + / -
             </button>
 
             <!-- ввод чисел в экспотенциальной форме (научной нотации) "2.5 х 10^3" это "2.5 - Е - 3 = 2500" : -->
             <button
-              class="math-functions__elem"
-              title="Основание натурального логафрима (~2.718)"
+              class="math-functions__elem exp-val-btn"
+              title="Основание натурального логарифма (~2.718)"
             >
               E
             </button>
@@ -129,10 +149,13 @@
             </button>
           </li>
 
+          <!----------------------------------------------------------------------------------->
+          <!-- НИЖНЯЯ ЧАСТЬ КАЛЬКУЛЯТОРА: -->
+          <!----------------------------------------------------------------------------------->
           <li
             class="calc-inner__actions-arithmetic-nums actions-arithmetic-nums"
           >
-            <!-- Ряд №4: -->
+            <!-- ЛЕВЫЙ СТОЛБЕЦ: -->
             <div class="actions-arithmetic-nums__actions actions">
               <!-- функция программирования собственных вычислений : -->
               <button
@@ -155,37 +178,45 @@
               </button>
             </div>
 
+            <!-- ЧИСЛА И ОРИФМЕТИЧЕСКИЕ ВЫРАЖЕНИЯ: -->
             <div
               class="actions-arithmetic-nums__arithmetic-nums arithmetic-nums"
             >
-              <button class="arithmetic-nums__elem">7</button>
-              <button class="arithmetic-nums__elem">8</button>
-              <button class="arithmetic-nums__elem">9</button>
-              <button class="arithmetic-nums__elem">/</button>
+              <!-- РЯД №4: -->
+              <button class="arithmetic-nums__elem operand num-7-btn">7</button>
+              <button class="arithmetic-nums__elem operand num-8-btn">8</button>
+              <button class="arithmetic-nums__elem operand num-9-btn">9</button>
+              <button class="arithmetic-nums__elem operator divide-btn">
+                /
+              </button>
 
-              <!-- Ряд №5: -->
-              <button class="arithmetic-nums__elem">4</button>
-              <button class="arithmetic-nums__elem">5</button>
-              <button class="arithmetic-nums__elem">6</button>
-              <button class="arithmetic-nums__elem">*</button>
+              <!-- РЯД №5: -->
+              <button class="arithmetic-nums__elem operand num-4-btn">4</button>
+              <button class="arithmetic-nums__elem operand num-5-btn">5</button>
+              <button class="arithmetic-nums__elem operand num-6-btn">6</button>
+              <button class="arithmetic-nums__elem operator mult-btn">*</button>
 
-              <!-- Ряд №6: -->
-              <button class="arithmetic-nums__elem">1</button>
-              <button class="arithmetic-nums__elem">2</button>
-              <button class="arithmetic-nums__elem">3</button>
-              <button class="arithmetic-nums__elem">-</button>
+              <!-- РЯД №6: -->
+              <button class="arithmetic-nums__elem operand num-1-btn">1</button>
+              <button class="arithmetic-nums__elem operand num-2-btn">2</button>
+              <button class="arithmetic-nums__elem operand num-3-btn">3</button>
+              <button class="arithmetic-nums__elem operator subtract-btn">
+                -
+              </button>
 
-              <!-- Ряд №7: -->
-              <button class="arithmetic-nums__elem">0</button>
-              <button class="arithmetic-nums__elem">.</button>
+              <!-- РЯД №7: -->
+              <button class="arithmetic-nums__elem operand num-0-btn">0</button>
+              <button class="arithmetic-nums__elem decimal-btn">.</button>
               <button
-                class="arithmetic-nums__elem"
-                title="Начать / Остановить"
+                class="arithmetic-nums__elem user-progs-control-btn"
+                title="Старт / Пауза"
                 disabled
               >
                 R / S
               </button>
-              <button class="arithmetic-nums__elem">+</button>
+              <button class="arithmetic-nums__elem operator add-up-btn">
+                +
+              </button>
             </div>
           </li>
         </ul>
