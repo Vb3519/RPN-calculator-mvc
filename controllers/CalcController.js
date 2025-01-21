@@ -16,7 +16,10 @@ class CalcController {
     );
 
     this.view.simpleMathExpressionsBtns.forEach((expressionBtn) => {
-      expressionBtn.addEventListener('click', this.handleSetMathOperatorValue);
+      expressionBtn.addEventListener(
+        'click',
+        this.handleCalculateBinaryExpressionResult
+      );
     });
   }
 
@@ -28,6 +31,7 @@ class CalcController {
       : this.view.renderCurrentInputValue(lastNumberInStack);
   };
 
+  // --------------------------------------------------------------------------------------------------------------------------------------------
   // Таймер при активном пользовательском вводе (указание цифр для записи числа):
   setUserInputActiveTimer() {
     clearInterval(this.model.userInputActiveTimer);
@@ -45,7 +49,7 @@ class CalcController {
     }, 700);
   }
 
-  // -------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------------------------
   // Добавление точки (десятичной дроби):
   addDecimalToNumber = (e) => {
     // потеря контекста: addDecimalToNumber() {}
@@ -65,7 +69,7 @@ class CalcController {
     this.view.renderCurrentInputValue(currentInputValue);
   };
 
-  // -------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------------------------
   // Формирование числа для добавления в стек (или добавление цифры в стек):
   handleAddDigitToInput = (e) => {
     const { target } = e;
@@ -79,7 +83,7 @@ class CalcController {
     this.view.renderCurrentInputValue(currentInputValue);
   };
 
-  // -------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------------------------
   // Добавление числа в стек (при нажатии кнопки Enter):
   handleAddNumberToStack = async () => {
     if (this.model.temporalNumber === null || this.model.calcStack.length >= 9)
@@ -107,13 +111,55 @@ class CalcController {
     console.log(this.model);
   };
 
-  // Обработчик присваивания значения this.mathOperatorValue:
-  handleSetMathOperatorValue = (e) => {
-    const { target } = e;
-    const mathOperatorValue = target.innerText.trim();
+  // Общие действия для расчета мат. выражения с добавлением операндов ч/з Enter и по клику на бинарный оператор:
+  setGeneralizedOptionsForBinaryExpression = async (targetText) => {
+    this.model.setMathOperatorValue(targetText);
 
-    this.model.setMathOperatorValue(mathOperatorValue);
+    this.model.setExpressionData(); // назначить всю дату выбранного математического выражения (оператор, операнды, само мат. выражение)
+
+    this.model.calculateResult();
+
+    await this.view.renderActionMsg(targetText); // промис - сообщение со значением текущего оператора
+
+    this.model.addNumberToStack(this.model.mathExpressionResult); // добавление результата вычисления в стэк
+
+    this.model.resetMathExpressionData(); // ресет данных всего математического выражения
+
+    // Поле ввода неактивно, отображается верхний элемент стэка:
+    this.model.setIsUserInputActive(false);
+    this.renderInputState();
     console.log(this.model);
+  };
+
+  // --------------------------------------------------------------------------------------------------------------------------------------------
+  // Вычисление результата бинарного выражения:
+  handleCalculateBinaryExpressionResult = (e) => {
+    const { target } = e;
+
+    if (this.model.calcStack.length === 0) return; // для начала расчетов пользователь должен добавить ч/з Enter в стак хотя бы одно число
+
+    // Выполнение расчета при нажатии на кнопку бинарного оператора (это "+", "-", "/", "*"):
+    // Обязательно! уже должен быть добавлен ч/з Enter один операнд
+    if (this.model.isUserInputActive && this.model.calcStack.length >= 1) {
+      clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
+      this.model.userInputActiveTimer = null;
+
+      // По нажатию на оператор - добавление текущего числа (из input) в стек:
+      const numberToAdd = this.model.temporalNumber;
+      this.model.addNumberToStack(numberToAdd);
+
+      // Очистка текущего числа и очистка поля input:
+      this.model.temporalNumber = null;
+      this.view.calcInput.value = '';
+
+      this.setGeneralizedOptionsForBinaryExpression(target.innerText);
+    }
+
+    // Вычисление результата когда пользователь добавил оба операнда ч/з Enter и поле ввода НЕактивно:
+    // в стэке обязательно должны быть минимум 2 операнда
+    if (!this.model.isUserInputActive && this.model.calcStack.length >= 2) {
+      this.setGeneralizedOptionsForBinaryExpression(target.innerText);
+    }
   };
 }
 

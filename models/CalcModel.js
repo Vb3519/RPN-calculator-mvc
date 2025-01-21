@@ -1,6 +1,7 @@
 class CalcModel {
   constructor() {
-    this.inputValue = [];
+    this.inputValue = []; // для рендера
+    this.virtualInputValue = []; // для работы со стеком
     this.calcStack = [];
 
     this.isUserInputActive = false;
@@ -102,11 +103,78 @@ class CalcModel {
     console.log(this.mathOperatorValue);
   }
 
-  calculateResult() {
+  // Назначить текущее математическое выражение:
+  setCurrentMathExpression(value) {
+    if (this.mathOperatorValue === null || this.currentMathExpression) return;
+
+    this.currentMathExpression = value;
+  }
+
+  // Назначить унарное математическое выражение (операнд и оператор):
+  setUnaryMathExpression(operatorVal) {
+    const unaryMathOperatorsArr = Object.keys(this.unaryMathExpressionsData);
+
+    if (unaryMathOperatorsArr.includes(operatorVal)) {
+      this.unaryExpressionNum = this.calcStack.pop();
+    }
+
+    this.setCurrentMathExpression(this.unaryMathExpressionsData[operatorVal]);
+  }
+
+  // Назначить быинарное математическое выражение (операнды и оператор):
+  setBinaryMathExpression(operatorVal) {
+    const binaryMathOperatorsArr = Object.keys(this.binaryMathExpressionsData);
+
+    if (binaryMathOperatorsArr.includes(operatorVal)) {
+      this.secondExpressionNum = this.calcStack.pop();
+      this.firstExpressionNum = this.calcStack.pop();
+    }
+
+    this.setCurrentMathExpression(this.binaryMathExpressionsData[operatorVal]);
+  }
+
+  // На основании оператора назначить значения чисел для вычисления результата выражения и само выражение:
+  setExpressionData() {
     if (this.mathOperatorValue === null) return;
+
+    const currentMathOperator = this.mathOperatorValue;
+
+    this.setUnaryMathExpression(currentMathOperator);
+    this.setBinaryMathExpression(currentMathOperator);
+  }
+
+  // Расчет результата выражения:
+  calculateResult() {
+    if (this.currentMathExpression === null) return;
 
     const unaryMathOperatorsArr = Object.keys(this.unaryMathExpressionsData);
     const binaryMathOperatorsArr = Object.keys(this.binaryMathExpressionsData);
+
+    if (binaryMathOperatorsArr.includes(this.mathOperatorValue)) {
+      this.mathExpressionResult = this.currentMathExpression(
+        this.firstExpressionNum,
+        this.secondExpressionNum
+      ).toString();
+    }
+
+    if (unaryMathOperatorsArr.includes(this.mathOperatorValue)) {
+      this.mathExpressionResult = this.currentMathExpression(
+        this.unaryExpressionNum
+      ).toString();
+    }
+  }
+
+  resetMathExpressionData() {
+    this.mathOperatorValue = null;
+    this.mathOperatorPos = null;
+
+    this.secondExpressionNum = null;
+    this.firstExpressionNum = null;
+
+    this.unaryExpressionNum = null;
+
+    this.currentMathExpression = null;
+    this.mathExpressionResult = null;
   }
 }
 
