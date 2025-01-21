@@ -3,26 +3,50 @@ class CalcController {
     this.model = model;
     this.view = view;
 
+    // --------------------------------------------------------------------------------------------------------------------------------------------
     // Обработчики событий:
+
+    // Добавление цифр в поле ввода:
     this.view.numbersArr.forEach((numberBtn) => {
       numberBtn.addEventListener('click', this.handleAddDigitToInput);
     });
 
+    // Добавления десятичной дроби к числу:
     this.view.decimalBtn.addEventListener('click', this.addDecimalToNumber);
 
+    // Добавить число в стек:
     this.view.enterValueBtn.addEventListener(
       'click',
       this.handleAddNumberToStack
     );
 
+    // Простые арифметические выражения с бинарным оператором ['+', '-', '*', '/']
     this.view.simpleMathExpressionsBtns.forEach((expressionBtn) => {
       expressionBtn.addEventListener(
         'click',
         this.handleCalculateBinaryExpressionResult
       );
     });
+
+    // Поменять два верхних значения стека местами:
+    this.view.swapValuesBtn.addEventListener(
+      'click',
+      this.handleSwapNearbyNums
+    );
+
+    // Переключить знак ("+" или "-") у числа в поле input:
+    this.view.toggleNumberSignBtn.addEventListener(
+      'click',
+      this.handleSetSignToNumberInInput
+    );
+
+    this.view.clearCurrentValBtn.addEventListener(
+      'click',
+      this.handleDeleteDigitInInput
+    );
   }
 
+  // Рендер состояния Input:
   renderInputState = () => {
     const lastNumberInStack = this.model.getStackTopNumber();
 
@@ -160,6 +184,60 @@ class CalcController {
     if (!this.model.isUserInputActive && this.model.calcStack.length >= 2) {
       this.setGeneralizedOptionsForBinaryExpression(target.innerText);
     }
+  };
+
+  // --------------------------------------------------------------------------------------------------------------------------------------------
+  // Поменять два верхних значения стека местами:
+  handleSwapNearbyNums = async (e) => {
+    const target = e.target;
+
+    if (this.model.calcStack.length >= 2 && !this.model.isUserInputActive) {
+      await this.view.renderActionMsg('<>');
+      this.model.swapNearbyNumsInStack();
+
+      const lastNumberInStack = this.model.getStackTopNumber();
+      this.view.renderCurrentInputValue(lastNumberInStack);
+
+      console.log(this.model);
+    }
+  };
+
+  // Задать отрицательное / положительное значение для this.model.temporalNumber
+  handleSetSignToNumberInInput = () => {
+    if (this.model.temporalNumber === null || !this.model.isUserInputActive)
+      return;
+
+    if (this.model.temporalNumber.includes('-')) {
+      this.model.temporalNumber = this.model.temporalNumber.slice(1);
+      this.view.renderCurrentInputValue(this.model.temporalNumber);
+    } else {
+      this.model.temporalNumber = '-' + this.model.temporalNumber;
+      this.view.renderCurrentInputValue(this.model.temporalNumber);
+    }
+
+    console.log(this.model);
+  };
+
+  // Удаление цифры (либо по одной цифре, включая десятичную дробь) текущего числа в input:
+  handleDeleteDigitInInput = () => {
+    if (this.model.temporalNumber === null || !this.model.isUserInputActive)
+      return;
+
+    // Если пользователь стирает все цифры, поле ввода становится неактивным до ввода новых цифр:
+    if (this.model.temporalNumber === '') {
+      this.model.setIsUserInputActive(false); // состояние поля ввода
+      this.model.temporalNumber = null;
+      return;
+    }
+
+    const currentNum = this.model.temporalNumber;
+    const editedNum = currentNum.slice(0, -1); // каждый раз стирает последнюю цифру, возвращая число от первой до предпоследней цифры
+    this.model.temporalNumber = editedNum;
+    // Второй вариант (метод массивов ".pop()"):
+
+    this.view.renderCurrentInputValue(editedNum);
+
+    console.log(this.model);
   };
 }
 

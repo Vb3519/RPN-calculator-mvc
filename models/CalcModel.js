@@ -164,6 +164,7 @@ class CalcModel {
     }
   }
 
+  // Полный ресет данных мат. выражения после завершения расчета:
   resetMathExpressionData() {
     this.mathOperatorValue = null;
     this.mathOperatorPos = null;
@@ -175,6 +176,12 @@ class CalcModel {
 
     this.currentMathExpression = null;
     this.mathExpressionResult = null;
+  }
+
+  // Поменять два верхних значения стека местами:
+  swapNearbyNumsInStack() {
+    const replacedNumsArr = this.calcStack.splice(-2, 2).reverse();
+    replacedNumsArr.forEach((replacedNum) => this.calcStack.push(replacedNum));
   }
 }
 

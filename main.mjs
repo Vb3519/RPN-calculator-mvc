@@ -6,8 +6,6 @@ const calcModel = new CalcModel();
 const calcView = new CalcView();
 const calcController = new CalcController(calcModel, calcView);
 
-// calcController.renderNumberUnderlineBlink();
-
 console.log(calcModel);
 console.log(calcView);
 console.log(calcController);
