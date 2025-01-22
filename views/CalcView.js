@@ -97,14 +97,14 @@ class CalcView {
     this.calcInput.value = value;
   }
 
-  renderActionMsg(msgValue) {
+  renderActionMsg(msgValue, timerVal) {
     this.calcInput.value = msgValue;
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         this.calcInput.value = '';
         resolve();
-      }, 300);
+      }, timerVal);
     });
   }
 

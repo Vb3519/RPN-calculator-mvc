@@ -28,7 +28,7 @@ class CalcController {
       );
     });
 
-    // Извлечение квадратного корня из числа (тест): // ------------------------
+    // Арифметические выражения с унарным оператором:
     this.view.unaryOperatorsArr.forEach((unaryOperator) =>
       unaryOperator.addEventListener(
         'click',
@@ -48,16 +48,19 @@ class CalcController {
       this.handleSetSignToNumberInInput
     );
 
+    // Быстрое добавление значения (~2.718) основания ln(x):
     this.view.expValueBtn.addEventListener(
       'click',
       this.handleFastAdditionOfBaseLn
     );
 
+    // Удаление цифры (либо по одной цифре, включая десятичную дробь) текущего числа в input:
     this.view.clearCurrentValBtn.addEventListener(
       'click',
       this.handleDeleteDigitInInput
     );
 
+    // Полный ресет всей даты калькулятора:
     this.view.resetAllBtn.addEventListener(
       'click',
       this.handleResetAllCalcData
@@ -125,18 +128,6 @@ class CalcController {
     this.view.renderCurrentInputValue(currentInputValue);
   };
 
-  isNumberCorrect = () => {
-    if (this.model.temporalNumber === null) return;
-    if (this.model.temporalNumber.endsWith('.')) return;
-
-    if (
-      this.model.temporalNumber[this.model.temporalNumber.length - 1] === 0 &&
-      this.model.temporalNumber.includes('.')
-    ) {
-      return;
-    }
-  };
-
   // --------------------------------------------------------------------------------------------------------------------------------------------
   // Добавление числа в стек (при нажатии кнопки Enter):
   handleAddNumberToStack = async () => {
@@ -151,7 +142,7 @@ class CalcController {
 
     if (this.model.temporalNumber === '-') {
       this.model.temporalNumber = null;
-      await this.view.renderActionMsg('Error');
+      await this.view.renderActionMsg('Error', 300);
       return;
     }
 
@@ -167,7 +158,7 @@ class CalcController {
     clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
     this.model.userInputActiveTimer = null;
 
-    await this.view.renderActionMsg('Enter'); // промис на отображение слова "Enter" в поле input при добавлении числа в стек
+    await this.view.renderActionMsg('Enter', 300); // промис на отображение слова "Enter" в поле input при добавлении числа в стек
 
     const numberToAdd = this.model.temporalNumber;
     this.view.calcInput.value = this.model.temporalNumber;
@@ -194,16 +185,31 @@ class CalcController {
 
     this.model.calculateResult();
 
-    await this.view.renderActionMsg(targetText); // промис - сообщение со значением текущего оператора
+    await this.view.renderActionMsg(targetText, 300); // промис - сообщение со значением текущего оператора
 
-    this.model.addNumberToStack(this.model.mathExpressionResult); // добавление результата вычисления в стэк
-    console.log(this.model);
-    this.model.resetMathExpressionData(); // ресет данных всего математического выражения
+    // Если результат вычислений isNan():
+    if (this.model.mathExpressionResult === 'NaN') {
+      await this.view.renderActionMsg('Error', 300);
+      await this.view.renderActionMsg('Fetching last stack number...', 1500);
+      this.model.resetMathExpressionData();
 
-    // Поле ввода неактивно, отображается верхний элемент стэка; антиспам:
-    this.view.disableCalcBtn(false); // включение всех кнопок арифм. выражений
-    this.model.setIsUserInputActive(false);
-    this.renderInputState();
+      this.view.disableCalcBtn(false); // включение всех кнопок арифм. выражений
+      this.model.setIsUserInputActive(false);
+
+      const lastNumberInStack = this.model.getStackTopNumber();
+      lastNumberInStack
+        ? this.view.renderCurrentInputValue(lastNumberInStack)
+        : this.view.renderCurrentInputValue('Empty Data');
+    } else {
+      this.model.addNumberToStack(this.model.mathExpressionResult); // добавление результата вычисления в стэк
+      this.model.resetMathExpressionData(); // ресет данных всего математического выражения
+
+      // Поле ввода неактивно, отображается верхний элемент стэка; антиспам:
+      this.view.disableCalcBtn(false); // включение всех кнопок арифм. выражений
+      this.model.setIsUserInputActive(false);
+      this.renderInputState();
+    }
+
     console.log(this.model);
   };
 
@@ -282,7 +288,7 @@ class CalcController {
 
     if (this.model.calcStack.length >= 2 && !this.model.isUserInputActive) {
       clearInterval(this.model.userInputActiveTimer);
-      await this.view.renderActionMsg('<>');
+      await this.view.renderActionMsg('<>', 300);
       this.model.swapNearbyNumsInStack();
 
       const lastNumberInStack = this.model.getStackTopNumber();
@@ -337,7 +343,7 @@ class CalcController {
     this.view.expValueBtn.disabled = true;
 
     const { currentTarget } = e;
-    await this.view.renderActionMsg('e');
+    await this.view.renderActionMsg('e', 300);
 
     this.model.setIsUserInputActive(true);
     this.setUserInputActiveTimer();
@@ -352,11 +358,23 @@ class CalcController {
 
   // Полный ресет всей даты калькулятора:
   handleResetAllCalcData = async () => {
+    // Чистка поля input от текста ошибок:
+    if (
+      this.model.temporalNumber === null &&
+      this.model.calcStack.length === 0 &&
+      this.view.calcInput.value
+    ) {
+      await this.view.renderActionMsg('Reset', 300);
+      this.view.renderCurrentInputValue('');
+      return;
+    }
+
+    // Чистка даты калькулятора во время работы:
     if (this.model.calcStack.length === 0 && !this.model.isUserInputActive)
       return;
     this.view.resetAllBtn.disabled = true;
 
-    await this.view.renderActionMsg('Reset');
+    await this.view.renderActionMsg('Reset', 300);
     clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
 
     this.model.inputValue = []; // для рендера
