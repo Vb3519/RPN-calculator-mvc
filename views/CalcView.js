@@ -1,5 +1,9 @@
 class CalcView {
   constructor() {
+    // Унарные операторы:
+    this.unaryOperatorsArr = Array.from(
+      document.querySelectorAll('.unary-operator')
+    );
     this.arithmeticExpressionsAndNums = Array.from(
       document.querySelectorAll('.arithmetic-nums__elem')
     );
@@ -124,6 +128,9 @@ class CalcView {
     this.arithmeticExpressionsAndNums.forEach(
       (arithmeticBtn) => (arithmeticBtn.disabled = isDisabled)
     );
+
+    // Кнопка ресета:
+    this.resetAllBtn.disabled = isDisabled;
   }
 }
 

@@ -28,6 +28,14 @@ class CalcController {
       );
     });
 
+    // Извлечение квадратного корня из числа (тест): // ------------------------
+    this.view.unaryOperatorsArr.forEach((unaryOperator) =>
+      unaryOperator.addEventListener(
+        'click',
+        this.handleCalculateUnaryExpressionResult
+      )
+    );
+
     // Поменять два верхних значения стека местами:
     this.view.swapValuesBtn.addEventListener(
       'click',
@@ -40,14 +48,24 @@ class CalcController {
       this.handleSetSignToNumberInInput
     );
 
+    this.view.expValueBtn.addEventListener(
+      'click',
+      this.handleFastAdditionOfBaseLn
+    );
+
     this.view.clearCurrentValBtn.addEventListener(
       'click',
       this.handleDeleteDigitInInput
     );
+
+    this.view.resetAllBtn.addEventListener(
+      'click',
+      this.handleResetAllCalcData
+    );
   }
 
   // Рендер состояния Input:
-  renderInputState = () => {
+  renderInputState = async () => {
     const lastNumberInStack = this.model.getStackTopNumber();
 
     this.model.isUserInputActive
@@ -125,7 +143,11 @@ class CalcController {
     if (this.model.temporalNumber === null || this.model.calcStack.length >= 9)
       return;
 
-    if (this.model.temporalNumber.endsWith('.')) return; // работаю с числами - строками
+    if (
+      this.model.temporalNumber.endsWith('.') ||
+      this.model.temporalNumber === ''
+    )
+      return; // работаю с числами - строками
 
     if (this.model.temporalNumber === '-') {
       this.model.temporalNumber = null;
@@ -138,6 +160,7 @@ class CalcController {
     if (/^(-?0(\.0+)?|0(\.0+)?)$/.test(this.model.temporalNumber)) {
       return;
     }
+    this.view.enterValueBtn.disabled = true;
 
     this.model.setIsUserInputActive(false); // состояние поля ввода
 
@@ -158,11 +181,13 @@ class CalcController {
 
     this.renderInputState();
 
+    this.view.enterValueBtn.disabled = false;
+
     console.log(this.model);
   };
 
-  // Общие действия для расчета мат. выражения с добавлением операндов ч/з Enter и по клику на бинарный оператор:
-  setGeneralizedOptionsForBinaryExpression = async (targetText) => {
+  // Общие действия для расчета мат. выражения с добавлением операндов ч/з Enter и по клику на оператор:
+  setGeneralizedOptionsForMathExpression = async (targetText) => {
     this.model.setMathOperatorValue(targetText);
 
     this.model.setExpressionData(); // назначить всю дату выбранного математического выражения (оператор, операнды, само мат. выражение)
@@ -172,7 +197,7 @@ class CalcController {
     await this.view.renderActionMsg(targetText); // промис - сообщение со значением текущего оператора
 
     this.model.addNumberToStack(this.model.mathExpressionResult); // добавление результата вычисления в стэк
-
+    console.log(this.model);
     this.model.resetMathExpressionData(); // ресет данных всего математического выражения
 
     // Поле ввода неактивно, отображается верхний элемент стэка; антиспам:
@@ -187,13 +212,12 @@ class CalcController {
   handleCalculateBinaryExpressionResult = (e) => {
     const { target } = e;
 
-    this.view.disableCalcBtn(true); // отключение всех кнопок арифм. выражений
-
     if (this.model.calcStack.length === 0) return; // для начала расчетов пользователь должен добавить ч/з Enter в стак хотя бы одно число
 
     // Выполнение расчета при нажатии на кнопку бинарного оператора (это "+", "-", "/", "*"):
     // Обязательно! уже должен быть добавлен ч/з Enter один операнд
     if (this.model.isUserInputActive && this.model.calcStack.length >= 1) {
+      this.view.disableCalcBtn(true); // отключение всех кнопок арифм. выражений
       clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
       this.model.userInputActiveTimer = null;
 
@@ -205,13 +229,49 @@ class CalcController {
       this.model.temporalNumber = null;
       this.view.calcInput.value = '';
 
-      this.setGeneralizedOptionsForBinaryExpression(target.innerText);
+      this.setGeneralizedOptionsForMathExpression(target.innerText);
     }
 
     // Вычисление результата когда пользователь добавил оба операнда ч/з Enter и поле ввода НЕактивно:
     // в стэке обязательно должны быть минимум 2 операнда
     if (!this.model.isUserInputActive && this.model.calcStack.length >= 2) {
-      this.setGeneralizedOptionsForBinaryExpression(target.innerText);
+      this.view.disableCalcBtn(true);
+      this.setGeneralizedOptionsForMathExpression(target.innerText);
+    }
+  };
+
+  // --------------------------------------------------------------------------------------------------------------------------------------------
+  // Вычисление результата унарного выражения:
+  handleCalculateUnaryExpressionResult = async (e) => {
+    const { currentTarget } = e; // т.к. у унарных операторов внутри кнопки символы, использую "currentTarget.dataset.operator"
+    if (this.model.calcStack.length === 0 && !this.model.isUserInputActive)
+      return;
+
+    this.view.disableCalcBtn(true);
+
+    // Вычисление результата когда пользователь добавил операнд ч/з Enter и поле ввода НЕактивно:
+    // в стэке обязательно должен быть минимум 1 операнд
+    if (!this.model.isUserInputActive && this.model.calcStack.length >= 1) {
+      this.setGeneralizedOptionsForMathExpression(
+        currentTarget.dataset.operator
+      );
+    }
+
+    // Расчет при активном поле ввода:
+    if (this.model.isUserInputActive) {
+      clearInterval(this.model.userInputActiveTimer);
+      this.model.userInputActiveTimer = null;
+
+      const numberToAdd = this.model.temporalNumber;
+      this.model.addNumberToStack(numberToAdd);
+
+      this.model.temporalNumber = null;
+      this.view.calcInput.value = '';
+
+      // Общие действия для расчета мат. выражения с добавлением операндов ч/з Enter и по клику на оператор:
+      this.setGeneralizedOptionsForMathExpression(
+        currentTarget.dataset.operator
+      );
     }
   };
 
@@ -221,6 +281,7 @@ class CalcController {
     const target = e.target;
 
     if (this.model.calcStack.length >= 2 && !this.model.isUserInputActive) {
+      clearInterval(this.model.userInputActiveTimer);
       await this.view.renderActionMsg('<>');
       this.model.swapNearbyNumsInStack();
 
@@ -265,6 +326,48 @@ class CalcController {
     // Второй вариант (метод массивов ".pop()"):
 
     this.view.renderCurrentInputValue(editedNum);
+
+    console.log(this.model);
+  };
+
+  // Быстрое добавление основания натурального логарифма в поле input и свойство this.model.temporalNumber
+  handleFastAdditionOfBaseLn = async (e) => {
+    // handleFastAdditionOfBaseLn() {} потеря контекста
+    if (this.model.temporalNumber !== null) return;
+    this.view.expValueBtn.disabled = true;
+
+    const { currentTarget } = e;
+    await this.view.renderActionMsg('e');
+
+    this.model.setIsUserInputActive(true);
+    this.setUserInputActiveTimer();
+
+    const currentDigitValue = currentTarget.dataset.lnbase.trim();
+    this.model.setDigitToAddToTheStack(currentDigitValue); // this.model.temporalNumber
+
+    const currentInputValue = this.model.temporalNumber + '_';
+    this.view.renderCurrentInputValue(currentInputValue);
+    this.view.expValueBtn.disabled = false;
+  };
+
+  // Полный ресет всей даты калькулятора:
+  handleResetAllCalcData = async () => {
+    if (this.model.calcStack.length === 0 && !this.model.isUserInputActive)
+      return;
+    this.view.resetAllBtn.disabled = true;
+
+    await this.view.renderActionMsg('Reset');
+    clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
+
+    this.model.inputValue = []; // для рендера
+    this.model.calcStack = [];
+
+    this.model.isUserInputActive = false;
+    this.model.userInputActiveTimer = null;
+    this.model.temporalNumber = null; // временное значение, перед добавлением числа в стек
+
+    this.model.resetMathExpressionData();
+    this.view.resetAllBtn.disabled = false;
 
     console.log(this.model);
   };

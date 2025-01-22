@@ -20,7 +20,6 @@
   flex-direction: column;
   padding: 1rem;
   border-radius: 0.2rem;
-  gap: 1rem;
   background-color: #5e5e5e;
 }
 
@@ -31,6 +30,7 @@
   font-family: 'Poppins', sans-serif;
   font-size: 1.5rem;
   padding: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .rpn-calc__inner {
@@ -79,7 +79,7 @@
 
 /* STORE и RECALL (записать / извлечь значение из ячейки памяти): */
 .math-functions__memory-actions {
-  grid-column: span 2;
+  grid-column: span 3;
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -140,7 +140,7 @@
   background-color: #474747;
 }
 
-.rd-elem {
+/* .rd-elem {
   background-color: #763d23;
   border: none;
 }
@@ -156,18 +156,46 @@
 
 .rup-elem:hover {
   background-color: #5959a3;
-}
+} */
 
 .fa-left-long,
 .fa-right-long {
   font-size: 1rem;
 }
 
-button {
+.rpn-calc__autor-sign {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #404040;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.math-functions__elem,
+.memory-actions__elem,
+.triginometry__elem,
+.actions__elem,
+.arithmetic-nums__elem {
   padding: 0.5rem;
   cursor: pointer;
   background-color: #404040;
   border: none;
   border-radius: 0.2rem;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+.clear-all-elem {
+  background-color: #7d4125;
+}
+
+.clear-all-elem:hover {
+  background-color: #8a4728;
+}
+
+.disabled-btn {
+  background-color: #636363;
+}
+
+.disabled-btn:hover {
+  cursor: not-allowed;
+  background-color: #636363;
 }

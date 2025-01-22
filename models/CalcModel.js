@@ -1,13 +1,11 @@
 class CalcModel {
   constructor() {
     this.inputValue = []; // для рендера
-    this.virtualInputValue = []; // для работы со стеком
     this.calcStack = [];
 
     this.isUserInputActive = false;
     this.userInputActiveTimer = null;
     this.temporalNumber = null; // временное значение, перед добавлением числа в стек
-    this.calcStorage = [];
 
     this.mathOperatorValue = null;
     this.mathOperatorPos = null;

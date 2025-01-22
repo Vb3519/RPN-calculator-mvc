@@ -24,24 +24,27 @@
             <!-- РЯД №1: -->
             <!-- квадратный корень из числа х: -->
             <button
-              class="math-functions__elem square-root"
+              class="math-functions__elem unary-operator square-root"
               title="Квадратный корень числа"
+              data-operator="√"
             >
               <i class="fa-solid fa-square-root-variable"></i>
             </button>
 
             <!-- возведение основания натурального логарифма ~2.718 в степень x: -->
             <button
-              class="math-functions__elem exp-btn"
+              class="math-functions__elem unary-operator exp-btn"
               title="Возведение основания натурального логарифма (~2.718) в степень х"
+              data-operator="e^x"
             >
               e ^ x
             </button>
 
             <!-- вычисление натурального логарифма (LN) заданного числа x: -->
             <button
-              class="math-functions__elem ln-btn"
+              class="math-functions__elem unary-operator ln-btn"
               title="Натуральный логарифм"
+              data-operator="ln(x)"
             >
               LN(x)
             </button>
@@ -56,8 +59,9 @@
 
             <!-- вычисление обратного числа (рецепрока) для текущего значения в стеке: -->
             <button
-              class="math-functions__elem reciprocal-btn"
+              class="math-functions__elem unary-operator reciprocal-btn"
               title="Обратное число"
+              data-operator="1/x"
             >
               1 / x
             </button>
@@ -67,7 +71,7 @@
               class="math-functions__elem ePlus-btn"
               title="115 000: 1.15 * 10^5"
             >
-              Σ+
+              Е+
             </button>
 
             <!-- РЯД №2: -->
@@ -75,37 +79,49 @@
               <!-- сохранение верхнего элемента стека в память для дальнейшего использования: -->
               <button
                 class="memory-actions__elem memory-actions-store"
-                title="Сохранить число"
+                title="Память калькулятора"
               >
                 STO
               </button>
 
               <!-- извлечение числа из памяти (если оно сохранено заранее): -->
               <button
-                class="memory-actions__elem memory-actions-recall"
+                class="memory-actions__elem memory-actions-recall disabled-btn"
                 title="Извлечь число"
               >
                 RCL
               </button>
-            </div>
 
-            <!-- перемещение верхнего элемента стека вниз [5, 8, 3] -> [8, 3, 5]: -->
-            <button
-              class="math-functions__elem prev-number-btn"
-              title="К предыдущему числу"
-            >
-              R<i class="fa-solid fa-arrow-down-long"></i>
-            </button>
+              <!-- перемещение верхнего элемента стека вниз [5, 8, 3] -> [8, 3, 5]: -->
+              <button
+                class="memory-actions__elem prev-number-btn"
+                title="К предыдущему числу"
+              >
+                R<i class="fa-solid fa-arrow-down-long"></i>
+              </button>
+            </div>
 
             <!-- Тригонометрия: -->
             <div class="math-functions__triginometry triginometry">
-              <button class="triginometry__elem sin-btn" title="Синус">
+              <button
+                class="triginometry__elem unary-operator sin-btn"
+                data-operator="sin(x)"
+                title="Синус"
+              >
                 SIN
               </button>
-              <button class="triginometry__elem cos-btn" title="Косинус">
+              <button
+                class="triginometry__elem unary-operator cos-btn"
+                data-operator="cos(x)"
+                title="Косинус"
+              >
                 COS
               </button>
-              <button class="triginometry__elem tan-btn" title="Тангенс">
+              <button
+                class="triginometry__elem unary-operator tan-btn"
+                data-operator="tan(x)"
+                title="Тангенс"
+              >
                 TAN
               </button>
             </div>
@@ -138,6 +154,7 @@
             <button
               class="math-functions__elem exp-val-btn"
               title="Основание натурального логарифма (~2.718)"
+              data-lnbase="2.718"
             >
               E
             </button>
@@ -159,18 +176,21 @@
             <div class="actions-arithmetic-nums__actions actions">
               <!-- функция программирования собственных вычислений : -->
               <button
-                class="actions__elem xeq-elem"
+                class="actions__elem xeq-elem disabled-btn"
                 title="Польз. программы"
                 disabled
               >
                 XEQ
               </button>
               <!-- Roll Down (сдвиг верхнего эл-та стека вниз) т.е. [5, 8, 3] -> [8, 3, 5]: -->
-              <button class="actions__elem rd-elem" title="Назад">
+              <button class="actions__elem rd-elem disabled-btn" title="Назад">
                 <i class="fa-solid fa-left-long"></i>
               </button>
               <!-- Roll Up (сдвиг верхнего эл-та стека вверх) т.е. [5, 8, 3] -> [3, 5, 8]: -->
-              <button class="actions__elem rup-elem" title="Вперед">
+              <button
+                class="actions__elem rup-elem disabled-btn"
+                title="Вперед"
+              >
                 <i class="fa-solid fa-right-long"></i>
               </button>
               <button class="actions__elem clear-all-elem" title="Ресет">
@@ -208,7 +228,7 @@
               <button class="arithmetic-nums__elem operand num-0-btn">0</button>
               <button class="arithmetic-nums__elem decimal-btn">.</button>
               <button
-                class="arithmetic-nums__elem user-progs-control-btn"
+                class="arithmetic-nums__elem user-progs-control-btn disabled-btn"
                 title="Старт / Пауза"
                 disabled
               >
@@ -220,6 +240,7 @@
             </div>
           </li>
         </ul>
+        <!-- <span class="rpn-calc__autor-sign">by Viktor Bordyugov 2025</span> -->
       </section>
     </div>
   </body>
