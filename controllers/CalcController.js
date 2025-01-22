@@ -107,6 +107,18 @@ class CalcController {
     this.view.renderCurrentInputValue(currentInputValue);
   };
 
+  isNumberCorrect = () => {
+    if (this.model.temporalNumber === null) return;
+    if (this.model.temporalNumber.endsWith('.')) return;
+
+    if (
+      this.model.temporalNumber[this.model.temporalNumber.length - 1] === 0 &&
+      this.model.temporalNumber.includes('.')
+    ) {
+      return;
+    }
+  };
+
   // --------------------------------------------------------------------------------------------------------------------------------------------
   // Добавление числа в стек (при нажатии кнопки Enter):
   handleAddNumberToStack = async () => {
@@ -115,15 +127,29 @@ class CalcController {
 
     if (this.model.temporalNumber.endsWith('.')) return; // работаю с числами - строками
 
+    if (this.model.temporalNumber === '-') {
+      this.model.temporalNumber = null;
+      await this.view.renderActionMsg('Error');
+      return;
+    }
+
+    // Регулярное выражение, которое не дает добавить в стек числа вида 0.0 или -0.0 с любым кол-ом 0:
+    // Изначально проверял методом endsWidth('0') и includes('.') блокирует ввод чисел вида "10.20"
+    if (/^(-?0(\.0+)?|0(\.0+)?)$/.test(this.model.temporalNumber)) {
+      return;
+    }
+
     this.model.setIsUserInputActive(false); // состояние поля ввода
 
     clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
     this.model.userInputActiveTimer = null;
 
-    const numberToAdd = this.model.temporalNumber;
     await this.view.renderActionMsg('Enter'); // промис на отображение слова "Enter" в поле input при добавлении числа в стек
 
+    const numberToAdd = this.model.temporalNumber;
     this.view.calcInput.value = this.model.temporalNumber;
+
+    if (numberToAdd === null) return; // повторная проверка (защита от спама кнопки и добавления null в стек)
 
     this.model.addNumberToStack(numberToAdd);
 
@@ -149,7 +175,8 @@ class CalcController {
 
     this.model.resetMathExpressionData(); // ресет данных всего математического выражения
 
-    // Поле ввода неактивно, отображается верхний элемент стэка:
+    // Поле ввода неактивно, отображается верхний элемент стэка; антиспам:
+    this.view.disableCalcBtn(false); // включение всех кнопок арифм. выражений
     this.model.setIsUserInputActive(false);
     this.renderInputState();
     console.log(this.model);
@@ -159,6 +186,8 @@ class CalcController {
   // Вычисление результата бинарного выражения:
   handleCalculateBinaryExpressionResult = (e) => {
     const { target } = e;
+
+    this.view.disableCalcBtn(true); // отключение всех кнопок арифм. выражений
 
     if (this.model.calcStack.length === 0) return; // для начала расчетов пользователь должен добавить ч/з Enter в стак хотя бы одно число
 

@@ -1,11 +1,19 @@
 class CalcView {
   constructor() {
+    this.arithmeticExpressionsAndNums = Array.from(
+      document.querySelectorAll('.arithmetic-nums__elem')
+    );
+
     this.simpleMathExpressionsBtns = Array.from(
       document.querySelectorAll('.operator')
     );
     //------------------------------------------------------------------------------------------------------------------------------
     // ВЕРХНЯЯ ЧАСТЬ КАЛЬКУЛЯТОРА:
     this.calcInput = document.getElementById('calc-input');
+    // Почти все верхние кнопки верха калькулятора:
+    this.mathFunctionsBtns = Array.from(
+      document.querySelectorAll('.math-functions__elem')
+    );
     // РЯД №1:
     this.squareRootBtn = document.querySelector('.square-root'); // квадратный корень из числа x
     this.expBtn = document.querySelector('.exp-btn'); // возведение основания нат. логарифма (~2.71828) в степень х, т.е. e^x
@@ -15,6 +23,10 @@ class CalcView {
     this.convertToScientificNotationBtn = document.querySelector('.ePlus-btn'); // пример: 115 000: 1.15 * 10^5
 
     // РЯД №2:
+    // Память калькулятора:
+    this.memoryActionsBtns = Array.from(
+      document.querySelectorAll('.memory-actions__elem')
+    );
     this.calculationsStoreBtn = document.querySelector('.memory-actions-store'); // сохранить значение в store
     this.calculationsRecallBtn = document.querySelector(
       '.memory-actions-recall'
@@ -22,6 +34,9 @@ class CalcView {
     this.prevNumberBtn = document.querySelector('.prev-number-btn'); // перемещение верхнего числа стека вниз [5, 8, 3] -> [3, 5, 8]
 
     // Тригонометрия:
+    this.triginometryBtns = Array.from(
+      document.querySelectorAll('.math-functions__triginometry')
+    );
     this.SinBtn = document.querySelector('.sin-btn'); // Синус
     this.CosBtn = document.querySelector('.cos-btn'); // Косинус
     this.TanBtn = document.querySelector('.tan-btn'); // Тангенс
@@ -87,6 +102,28 @@ class CalcView {
         resolve();
       }, 300);
     });
+  }
+
+  disableCalcBtn(isDisabled) {
+    // Кнопки верхней части калькулятора:
+    this.mathFunctionsBtns.forEach(
+      (mathFuncBtn) => (mathFuncBtn.disabled = isDisabled)
+    );
+
+    // Память калькулятора:
+    this.memoryActionsBtns.forEach(
+      (memoryActionsBtn) => (memoryActionsBtn.disabled = isDisabled)
+    );
+
+    // Тригонометрия:
+    this.triginometryBtns.forEach(
+      (triginometryBtn) => (triginometryBtn.disabled = isDisabled)
+    );
+
+    // Кнопки нижней части калькулятора (операторы простых арифм. выражений и цифры):
+    this.arithmeticExpressionsAndNums.forEach(
+      (arithmeticBtn) => (arithmeticBtn.disabled = isDisabled)
+    );
   }
 }
 
