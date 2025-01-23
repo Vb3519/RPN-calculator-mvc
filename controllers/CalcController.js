@@ -60,10 +60,37 @@ class CalcController {
       this.handleDeleteDigitInInput
     );
 
+    // Возведение в степень y^x:
+    this.view.powBtn.addEventListener(
+      'click',
+      this.handleCalculateBinaryExpressionResult
+    );
+
+    // Представление числа в научной нотации:
+    this.view.convertToScientificNotationBtn.addEventListener(
+      'click',
+      this.handleCalculateBinaryExpressionResult
+    );
+
     // Полный ресет всей даты калькулятора:
     this.view.resetAllBtn.addEventListener(
       'click',
       this.handleResetAllCalcData
+    );
+
+    // ------------------------------------------
+    // СТЕК КАЛЬКУЛЯТОРА:
+
+    // Активация режима просмотра стека калькулятора:
+    this.view.calculationsStoreBtn.addEventListener(
+      'click',
+      this.handleActivateCalcStore
+    );
+
+    // Просмотр текущего значения в стеке или переход к следующему:
+    this.view.prevNumberBtn.addEventListener(
+      'click',
+      this.handleShowNumsInStack
     );
   }
 
@@ -199,9 +226,12 @@ class CalcController {
       const lastNumberInStack = this.model.getStackTopNumber();
       lastNumberInStack
         ? this.view.renderCurrentInputValue(lastNumberInStack)
-        : this.view.renderCurrentInputValue('Empty Data');
+        : this.view.renderCurrentInputValue('Empty Stack Data');
     } else {
-      this.model.addNumberToStack(this.model.mathExpressionResult); // добавление результата вычисления в стэк
+      const calcResult =
+        Math.round(this.model.mathExpressionResult * 100000) / 100000; // округление до 5го знака после запятой
+
+      this.model.addNumberToStack(calcResult.toString()); // добавление результата вычисления в стэк
       this.model.resetMathExpressionData(); // ресет данных всего математического выражения
 
       // Поле ввода неактивно, отображается верхний элемент стэка; антиспам:
@@ -315,12 +345,13 @@ class CalcController {
   };
 
   // Удаление цифры (либо по одной цифре, включая десятичную дробь) текущего числа в input:
-  handleDeleteDigitInInput = () => {
+  handleDeleteDigitInInput = async () => {
     if (this.model.temporalNumber === null || !this.model.isUserInputActive)
       return;
 
     // Если пользователь стирает все цифры, поле ввода становится неактивным до ввода новых цифр:
     if (this.model.temporalNumber === '') {
+      await this.view.renderActionMsg('Empty', 300);
       this.model.setIsUserInputActive(false); // состояние поля ввода
       this.model.temporalNumber = null;
       return;
@@ -365,6 +396,7 @@ class CalcController {
       this.view.calcInput.value
     ) {
       await this.view.renderActionMsg('Reset', 300);
+      clearInterval(this.model.userInputActiveTimer);
       this.view.renderCurrentInputValue('');
       return;
     }
@@ -377,6 +409,9 @@ class CalcController {
     await this.view.renderActionMsg('Reset', 300);
     clearInterval(this.model.userInputActiveTimer); // очистка таймера this.userInputActiveTimer
 
+    this.resetStoreActiveTimer(); // очистка таймера для calcStore
+    this.model.resetCalcStore();
+
     this.model.inputValue = []; // для рендера
     this.model.calcStack = [];
 
@@ -387,6 +422,111 @@ class CalcController {
     this.model.resetMathExpressionData();
     this.view.resetAllBtn.disabled = false;
 
+    console.log(this.model);
+  };
+
+  // ------------------------------------------------------------------------------------------------------------------------------
+  // СТЕК КАЛЬКУЛЯТОРА (просмотр чисел, сохраненных в стеке калькулятора; без возможности их редактирования):
+
+  // Таймер при активном режиме просмотра стека калькулятора:
+  setCalcStoreActiveTimer = () => {
+    this.resetStoreActiveTimer();
+
+    this.model.calcStoreActiveTimer = setInterval(() => {
+      if (this.view.calcInput.value.endsWith('_mem')) {
+        const pos = this.view.calcInput.value.indexOf('_mem');
+
+        this.view.calcInput.value = this.view.calcInput.value.slice(0, pos);
+      } else {
+        this.view.calcInput.value = this.view.calcInput.value + '_mem';
+      }
+
+      this.view.calcInput.value = this.view.calcInput.value;
+    }, 700);
+  };
+
+  // Ресет таймера storeActive:
+  resetStoreActiveTimer() {
+    clearInterval(this.model.calcStoreActiveTimer);
+    this.model.calcStoreActiveTimer = null;
+  }
+
+  // Активация режима просмотра стека:
+  handleActivateCalcStore = async () => {
+    // if (this.model.calcStack.length === 0) return;
+
+    // Выход из режима просмотра стека:
+    if (this.model.isCalcStoreActive) {
+      this.resetStoreActiveTimer();
+
+      this.view.renderCalcMemoryActiveBtns();
+      await this.view.renderActionMsg('Memory', 300);
+      this.model.setIsCalcStoreActive(false);
+      this.view.disableCalcBtn(false);
+
+      this.model.resetCalcStore();
+
+      // если при выходе из режима просмотра стека пользовательский ввод был активен:
+      if (this.model.isUserInputActive) {
+        this.resetStoreActiveTimer();
+
+        this.setUserInputActiveTimer(); // таймер userInput
+        this.renderInputState();
+      } else {
+        this.resetStoreActiveTimer();
+
+        // если пользовательский ввод был НЕ активен:
+        const lastNumberInStack = this.model.getStackTopNumber();
+        lastNumberInStack
+          ? this.view.renderCurrentInputValue(lastNumberInStack)
+          : this.view.renderCurrentInputValue('Empty Stack Data');
+      }
+
+      console.log('Deactivated!');
+      console.log(this.model);
+      return;
+    }
+
+    // Активация режима просмотра стека:
+    this.view.renderCalcMemoryActiveBtns(); // синий цвет фона кнопок для работы со стеком
+    this.view.disableCalcBtn(true); // дизейбл всех кнопок калькулятора, пока идет просмотр стека
+
+    clearInterval(this.model.userInputActiveTimer); // очистка таймера userInput
+
+    await this.view.renderActionMsg('Memory', 300);
+
+    this.model.setIsCalcStoreActive(true); // активация режима просмотра стека
+
+    this.model.fillCalcStore();
+    this.model.setLastCalcStoreNumPos();
+    this.model.setCurrentCalcStoreNumValue();
+
+    const lastNumberInStack = this.model.getStackTopNumber();
+    lastNumberInStack
+      ? this.view.renderCurrentInputValue(lastNumberInStack)
+      : this.view.renderCurrentInputValue('Empty Data');
+
+    this.setCalcStoreActiveTimer();
+
+    // Разблокировка кнопок при завершении кода с небольшой задержкой (защита от спама):
+    setTimeout(() => {
+      this.view.calculationsStoreBtn.disabled = false;
+      this.view.prevNumberBtn.disabled = false;
+    }, 1000);
+
+    console.log('Activated!');
+    console.log(this.model);
+  };
+
+  // Просмотр чисел в стеке:
+  handleShowNumsInStack = async () => {
+    if (!this.model.isCalcStoreActive) return;
+
+    this.model.decrementCurrentCalcStoreNumPos();
+    this.model.setCurrentCalcStoreNumValue();
+
+    const currentNum = this.model.currentCalcStoreNumVal;
+    this.view.renderCurrentInputValue(currentNum);
     console.log(this.model);
   };
 }

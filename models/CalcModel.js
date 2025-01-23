@@ -3,6 +3,13 @@ class CalcModel {
     this.inputValue = []; // для рендера
     this.calcStack = [];
 
+    // Память калькулятора:
+    this.isCalcStoreActive = false;
+    this.calcStore = [];
+    this.currentCalcStoreNumVal = null;
+    this.currentCalcStoreNumPos = null;
+    this.calcStoreActiveTimer = null;
+
     this.isUserInputActive = false;
     this.userInputActiveTimer = null;
     this.temporalNumber = null; // временное значение, перед добавлением числа в стек
@@ -53,7 +60,7 @@ class CalcModel {
       '-': (a, b) => parseFloat(a) - parseFloat(b),
       '*': (a, b) => parseFloat(a) * parseFloat(b),
       '/': (a, b) => parseFloat(a) / parseFloat(b),
-      '^': (a, b) => parseFloat(a) ** parseFloat(b),
+      'y ^ x': (a, b) => parseFloat(a) ** parseFloat(b),
       'E+': (a, b) => parseFloat(a) * 10 ** parseFloat(b), // 115 000: 1.15 * 10^5 (для указания малых / больших чисел)
     };
   }
@@ -180,6 +187,56 @@ class CalcModel {
   swapNearbyNumsInStack() {
     const replacedNumsArr = this.calcStack.splice(-2, 2).reverse();
     replacedNumsArr.forEach((replacedNum) => this.calcStack.push(replacedNum));
+  }
+
+  // ------------------------------------------------------------------------------------------------------------------------------
+  // СТЕК КАЛЬКУЛЯТОРА (просмотр чисел, сохраненных в стеке калькулятора; без возможности их редактирования):
+
+  // Активация режима просмотра памяти калькулятора:
+  setIsCalcStoreActive(boolean) {
+    this.isCalcStoreActive = boolean;
+  }
+
+  // Заполнить память калькулятора:
+  fillCalcStore() {
+    if (this.calcStack.length === 0) return;
+
+    this.calcStack.forEach((num) => {
+      this.calcStore.push(num);
+    });
+  }
+
+  // Присвоить значение текущего индекса числа в стеке калькулятора:
+  setLastCalcStoreNumPos() {
+    if (this.calcStack.length === 0) return;
+
+    this.currentCalcStoreNumPos = this.calcStack.length - 1; // по-умолчанию со старта всегда индекс "верхнего" числа
+  }
+
+  // Задать значение текущего (просматриваемого) числа из стека:
+  setCurrentCalcStoreNumValue() {
+    if (this.currentCalcStoreNumPos === null) return;
+    const pos = this.currentCalcStoreNumPos;
+    const currentNum = this.calcStore[pos];
+    this.currentCalcStoreNumVal = currentNum;
+  }
+
+  // Уменьшить значение индекса текущего (просматриваемого) числа:
+  decrementCurrentCalcStoreNumPos() {
+    if (this.currentCalcStoreNumPos === null) return;
+
+    if (this.currentCalcStoreNumPos !== 0) {
+      this.currentCalcStoreNumPos = --this.currentCalcStoreNumPos; // такая запись this.currentCalcStoreNumPos-- не возвращает сразу актуальное значение
+    } else {
+      this.setLastCalcStoreNumPos(); // если === 0, то заново
+    }
+  }
+  // Ресет памяти калькулятора при закрытии:
+  resetCalcStore() {
+    this.isCalcStoreActive = false;
+    this.calcStore = [];
+    this.currentCalcStoreNumVal = null;
+    this.currentCalcStoreNumPos = null;
   }
 }
 

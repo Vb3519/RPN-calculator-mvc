@@ -39,7 +39,7 @@ class CalcView {
 
     // Тригонометрия:
     this.triginometryBtns = Array.from(
-      document.querySelectorAll('.math-functions__triginometry')
+      document.querySelectorAll('.triginometry__elem')
     );
     this.SinBtn = document.querySelector('.sin-btn'); // Синус
     this.CosBtn = document.querySelector('.cos-btn'); // Косинус
@@ -132,6 +132,14 @@ class CalcView {
     // Кнопка ресета:
     this.resetAllBtn.disabled = isDisabled;
   }
+
+  // ------------------------------------------
+  // СТЕК КАЛЬКУЛЯТОРА:
+  renderCalcMemoryActiveBtns = () => {
+    // renderCalcMemoryActive() {} потеря контекста
+    this.calculationsStoreBtn.classList.toggle('calc-memory');
+    this.prevNumberBtn.classList.toggle('calc-memory');
+  };
 }
 
 export default CalcView;

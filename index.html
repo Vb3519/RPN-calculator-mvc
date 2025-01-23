@@ -16,7 +16,21 @@
   <body>
     <div class="app-page">
       <section class="app-calc rpn-calc">
-        <input id="calc-input" class="rpn-calc__result-input" readonly />
+        <div class="rpn-calc__sign sign-container">
+          <div class="sign-container__label">
+            <i class="fa-solid fa-calculator"></i>
+            <span class="sign-container__label__descrip">Manual</span>
+          </div>
+          <span class="sign-container__autor-sign"
+            >RPN Calc by Viktor Bordyugov 2025</span
+          >
+        </div>
+        <input
+          id="calc-input"
+          class="rpn-calc__result-input"
+          readonly
+          maxlength="20"
+        />
 
         <ul class="rpn-calc__inner calc-inner">
           <!-- МАТЕМАТИЧЕСКИЕ ФУНКЦИИ: -->
@@ -71,7 +85,7 @@
               class="math-functions__elem ePlus-btn"
               title="115 000: 1.15 * 10^5"
             >
-              Е+
+              E+
             </button>
 
             <!-- РЯД №2: -->
@@ -240,7 +254,6 @@
             </div>
           </li>
         </ul>
-        <!-- <span class="rpn-calc__autor-sign">by Viktor Bordyugov 2025</span> -->
       </section>
     </div>
   </body>
