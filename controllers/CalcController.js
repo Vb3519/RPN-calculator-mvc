@@ -6,6 +6,12 @@ class CalcController {
     // --------------------------------------------------------------------------------------------------------------------------------------------
     // Обработчики событий:
 
+    // Отображение пользовательского мануала:
+    this.view.signAndLabelContainer.addEventListener(
+      'click',
+      this.view.renderCalcManual
+    );
+
     // Добавление цифр в поле ввода:
     this.view.numbersArr.forEach((numberBtn) => {
       numberBtn.addEventListener('click', this.handleAddDigitToInput);

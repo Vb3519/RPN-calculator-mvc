@@ -16,6 +16,81 @@
   <body>
     <div class="app-page">
       <section class="app-calc rpn-calc">
+        <!-- Мануал калькулятора: -->
+        <ul class="rpn-calc__manual calc-manual">
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">e ^ x</span>
+            <span class="calc-manual__elem__descrip">
+              - возведение основания натурального логарифма (~2.718) в степень
+              х</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">ln(x)</span>
+            <span class="calc-manual__elem__descrip">
+              - натуральный логарифм числа по основанию е (~2.7182)</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">y ^ x</span>
+            <span class="calc-manual__elem__descrip"
+              >- Y возведенное в степень X</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">Е+</span>
+            <span class="calc-manual__elem__descrip"
+              >- запись числа в научной нотации, y * 10^x; например: 115 000:
+              1.15 * 10^5</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">STO</span>
+            <span class="calc-manual__elem__descrip"
+              >- просмотр чисел, содержащихся в стэке калькулятора (Store), без
+              возможности их редактирования</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">R (Roll Down)</span>
+            <span class="calc-manual__elem__descrip"
+              >- кнопка для просмотра чисел, содержащихся в стеке
+              калькулятора</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">x <> y</span>
+            <span class="calc-manual__elem__descrip"
+              >- поменять местами верхнее число стэка калькулятора и ближайшее к
+              нему число
+            </span>
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">E</span>
+            <span class="calc-manual__elem__descrip"
+              >- быстрый ввод числа, равного значению основания натурального
+              логарифма (~2.7182)</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label"
+              ><i
+                class="fa-solid fa-left-long calc-manual__elem__label-arrow"
+              ></i
+            ></span>
+            <span class="calc-manual__elem__descrip">
+              - при активном пользовательском вводе, стирает по одной цифре из
+              текущего числа</span
+            >
+          </li>
+          <li class="calc-manual__elem">
+            <span class="calc-manual__elem__label">RCL, XEQ, R / S</span>
+            <span class="calc-manual__elem__descrip"
+              >- функционал отсутствует</span
+            >
+          </li>
+        </ul>
+
         <div class="rpn-calc__sign sign-container">
           <div class="sign-container__label">
             <i class="fa-solid fa-calculator"></i>
@@ -48,7 +123,7 @@
             <!-- возведение основания натурального логарифма ~2.718 в степень x: -->
             <button
               class="math-functions__elem unary-operator exp-btn"
-              title="Возведение основания натурального логарифма (~2.718) в степень х"
+              title="Возведение е (~2.718) в степень х"
               data-operator="e^x"
             >
               e ^ x
@@ -57,7 +132,7 @@
             <!-- вычисление натурального логарифма (LN) заданного числа x: -->
             <button
               class="math-functions__elem unary-operator ln-btn"
-              title="Натуральный логарифм"
+              title="Натуральный логарифм числа"
               data-operator="ln(x)"
             >
               LN(x)
@@ -83,7 +158,7 @@
             <!-- вычисление числа х, умноженного на 10^n (где n - целое число): -->
             <button
               class="math-functions__elem ePlus-btn"
-              title="115 000: 1.15 * 10^5"
+              title="Запись числа в научной нотации"
             >
               E+
             </button>
@@ -167,7 +242,7 @@
             <!-- ввод чисел в экспотенциальной форме (научной нотации) "2.5 х 10^3" это "2.5 - Е - 3 = 2500" : -->
             <button
               class="math-functions__elem exp-val-btn"
-              title="Основание натурального логарифма (~2.718)"
+              title="~2.718"
               data-lnbase="2.718"
             >
               E

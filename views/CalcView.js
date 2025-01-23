@@ -13,6 +13,11 @@ class CalcView {
     );
     //------------------------------------------------------------------------------------------------------------------------------
     // ВЕРХНЯЯ ЧАСТЬ КАЛЬКУЛЯТОРА:
+    this.signAndLabelContainer = document.querySelector(
+      '.sign-container__label'
+    );
+    this.calcManual = document.querySelector('.rpn-calc__manual');
+
     this.calcInput = document.getElementById('calc-input');
     // Почти все верхние кнопки верха калькулятора:
     this.mathFunctionsBtns = Array.from(
@@ -139,6 +144,12 @@ class CalcView {
     // renderCalcMemoryActive() {} потеря контекста
     this.calculationsStoreBtn.classList.toggle('calc-memory');
     this.prevNumberBtn.classList.toggle('calc-memory');
+  };
+
+  // ------------------------------------------
+  // МАНУАЛ КАЛЬКУЛЯТОРА:
+  renderCalcManual = () => {
+    this.calcManual.classList.toggle('calc-manual-active');
   };
 }
 
