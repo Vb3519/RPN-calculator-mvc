@@ -261,7 +261,8 @@
   border: none;
   border-radius: 0.2rem;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  font-size: 1rem;
+  /* font-size: 1rem; */
+  font-size: clamp(0.8rem, 3vw, 1rem);
 }
 
 .clear-all-elem {
@@ -287,4 +288,53 @@
 .disabled-btn:hover {
   cursor: not-allowed;
   background-color: #636363;
+}
+
+/* стили для небольших экранов: */
+@media (max-width: 355px) {
+  .app-calc {
+    max-width: 100%;
+    min-width: 275px;
+  }
+
+  .rpn-calc__inner {
+    gap: 1rem;
+  }
+
+  .rpn-calc__result-input {
+    font-size: 1.2rem;
+    padding: 0.4rem;
+    margin: 0.5rem 0;
+  }
+
+  .calc-inner__math-functions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .rpn-calc__sign {
+    gap: 1rem;
+  }
+
+  .sign-container__label {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .sign-container__label__descrip {
+    font-size: 0.8rem;
+  }
+
+  .sign-container__autor-sign {
+    text-align: right;
+  }
+
+  .user-progs-control-btn {
+    white-space: nowrap;
+    font-size: clamp(0.7rem, 3vw, 1rem);
+  }
+
+  .arithmetic-nums__elem {
+    min-width: 40px;
+  }
 }
