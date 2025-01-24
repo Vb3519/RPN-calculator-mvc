@@ -294,7 +294,7 @@
 @media (max-width: 450px) {
   .app-calc {
     max-width: 100%;
-    min-width: 275px;
+    min-width: 295px;
   }
 
   .rpn-calc__inner {
