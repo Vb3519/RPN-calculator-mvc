@@ -291,7 +291,7 @@
 }
 
 /* стили для небольших экранов: */
-@media (max-width: 355px) {
+@media (max-width: 450px) {
   .app-calc {
     max-width: 100%;
     min-width: 275px;
