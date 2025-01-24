@@ -151,6 +151,9 @@ class CalcController {
   // Формирование числа для добавления в стек (или добавление цифры в стек):
   handleAddDigitToInput = (e) => {
     const { target } = e;
+
+    if (this.view.calcInput.value.length >= 21) return;
+
     this.model.setIsUserInputActive(true); // состояние поля ввода (добавление цифр)
     this.setUserInputActiveTimer(); // при пользовательском вводе: таймер мигающей у числа линии
 
